@@ -1,9 +1,9 @@
 import os
 from pathlib import Path
 
-FOLDER_NAME = "Test"  # The directory with all the files to be fixed.
+FOLDER_NAME = "Test"  # The directory path with all the files to be fixed.
 TARGET_EXT = ".png"   # The extension you want to be replaced.
-NEW_EXT = ".jpg"      # The new extension for each file.
+NEW_EXT = ".jpg"      # The new extension to replace with.
 
 if __name__ == "__main__":
   # Lowercase the extensions incase of user-error.
