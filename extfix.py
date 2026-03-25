@@ -1,9 +1,24 @@
-import os
+"""Mass renames file extensions in a specified directory.
+
+  This program iterates through a specified directory and
+  replaces all occurrences of the target extension with a
+  new specified extension.
+
+  Example (.png to .jpg):
+    file1.png -> file1.jpg
+    file2.png -> file2.jpg
+  
+  Attributes:
+    DIRECTORY_NAME (str): The directory path with all the files to be fixed.
+    TARGET_EXT (str): The extension you want to be replaced.
+    NEW_EXT (str): The new extension to replace with.
+"""
+
 from pathlib import Path
 
-FOLDER_NAME = "Test"  # The directory path with all the files to be fixed.
-TARGET_EXT = ".png"   # The extension you want to be replaced.
-NEW_EXT = ".jpg"      # The new extension to replace with.
+DIRECTORY_NAME = "Test"  # The directory path with all the files to be fixed.
+TARGET_EXT = ".png"      # The extension you want to be replaced.
+NEW_EXT = ".jpg"         # The new extension to replace with.
 
 if __name__ == "__main__":
   # Lowercase the extensions incase of user-error.
@@ -11,43 +26,36 @@ if __name__ == "__main__":
   NEW_EXT = NEW_EXT.lower()
 
   # Counters
-  successCount = 0
-  skipCount = 0
-  errorCount = 0
+  success_count = 0
+  skip_count = 0
+  error_count = 0
 
-  files = [
-    os.path.join(FOLDER_NAME, file)                     # (3) Save file path from subdirectory.
-    for file in os.listdir(FOLDER_NAME)                 # (1) For every file in subdirectory.
-    if os.path.isfile(os.path.join(FOLDER_NAME, file))  # (2) If it is a valid file.
-  ]
-  
+  # Grab every file in the directory into the list.
+  directory = Path(DIRECTORY_NAME)
+  files = [file for file in directory.iterdir() if file.is_file()]
+
   # For every file in the subdirectory.
   for file in files:
-    # Obtain path.
-    filePath = Path(file)
-
     # File does not have the right extension to convert.
-    if filePath.suffix.lower() != TARGET_EXT:
-      skipCount += 1
-      print(f"[WARNING] {filePath} has been skipped since it is not the target extension ({TARGET_EXT}).")
+    if file.suffix.lower() != TARGET_EXT:
+      skip_count += 1
+      print(f"[WARNING] {file.name} has been skipped since it is not the "
+            f"target extension ({TARGET_EXT}).")
       continue
 
     # Create new file with the extension.
-    if TARGET_EXT == "":
-      # No extension for the file, just concat the extension.
-      newFile = file + NEW_EXT
-    else:
-      newFile = str(filePath.with_suffix(NEW_EXT))
+    new_file = file.with_suffix(NEW_EXT)
 
     # Already a file with the same name using that extension!
-    if os.path.exists(newFile):
-      print(f"[ERROR] {filePath} cannot be converted, {newFile} already exists!")
-      errorCount += 1
+    if new_file.exists():
+      print(f"[ERROR] {file.name} cannot be converted, "
+            f"{new_file.name} already exists!")
+      error_count += 1
       continue
 
     # File can be renamed.
-    if (filePath.suffix.lower() == TARGET_EXT):
-      os.rename(file, newFile)
-      successCount += 1
-  
-  print(f"Finished converting {successCount} files with {skipCount} skipped and {errorCount} errors.")
+    file.rename(new_file)
+    success_count += 1
+
+  print(f"Finished converting {success_count} files with "
+        f"{skip_count} skipped and {error_count} errors.")
