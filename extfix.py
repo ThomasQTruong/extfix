@@ -17,8 +17,8 @@
 from pathlib import Path
 
 DIRECTORY_NAME = "Test"  # The directory path with all the files to be fixed.
-TARGET_EXT = ".png"      # The extension you want to be replaced.
-NEW_EXT = "jpg"         # The new extension to replace with.
+TARGET_EXT = ".jpg"      # The extension you want to be replaced.
+NEW_EXT = ".png"         # The new extension to replace with.
 
 if __name__ == "__main__":
   # Clean the extensions incase of user-error.
@@ -37,13 +37,15 @@ if __name__ == "__main__":
 
   # Grab every file in the directory into the list.
   directory = Path(DIRECTORY_NAME)
-  files = [file for file in directory.iterdir() if file.is_file()]
 
   # For every file in the subdirectory.
-  for file in files:
+  for file in directory.iterdir():
+    # If it is not a file, skip it.
+    if not file.is_file():
+      continue
+
     # File does not have the right extension to convert.
-    if ((TARGET_EXT != "" or file.suffix != "")
-        and not file.name.endswith(TARGET_EXT)):
+    if not file.name.endswith(TARGET_EXT):
       skip_count += 1
       print(f"[WARNING] {file.name} has been skipped since it is not the "
             f"target extension ({TARGET_EXT}).")
