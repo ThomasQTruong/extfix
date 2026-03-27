@@ -7,7 +7,11 @@ Mass fixes or converts file extensions in a specified folder to a different exte
 
 # Requirements
 - Python >= 3.9
-- `pip install -r requirements.txt`
+  - Only needed for CLI / development.
+- ```bash
+     pip install -r requirements.txt
+  ```
+  - Only needed for development.
   - Not needed for [extfix_cli](extfix_cli.py) version.
 
 # How To use (GUI - [extfix.py](extfix.py))
