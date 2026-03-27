@@ -25,9 +25,9 @@ if __name__ == "__main__":
   TARGET_EXT = TARGET_EXT.lower().strip()
   NEW_EXT = NEW_EXT.lower().strip()
   # If user forgets the ".", add it for them.
-  if TARGET_EXT != "" and TARGET_EXT[0] != ".":
+  if TARGET_EXT and not TARGET_EXT.startswith("."):
     TARGET_EXT = "." + TARGET_EXT
-  if NEW_EXT != "" and NEW_EXT[0] != ".":
+  if NEW_EXT and not NEW_EXT.startswith("."):
     NEW_EXT = "." + NEW_EXT
 
   # Counters
