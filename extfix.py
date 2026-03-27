@@ -18,7 +18,8 @@ ctk.set_appearance_mode("dark")  # Set to dark mode.
 
 
 class ExtFixApp(ctk.CTk):
-  """A CustomTkinter-based GUI application for mass-renaming file extensions.
+  """
+  A CustomTkinter-based GUI application for mass-renaming file extensions.
 
   This class inherits from the CustomTkinter class, creates the UI layout,
   and handles the file renaming logic with a visual progress bar.
