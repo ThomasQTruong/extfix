@@ -1,4 +1,4 @@
-"""Mass renames file extensions in a specified directory.
+"""Mass rename file extensions in a specified folder to a different extension.
 
   This program iterates through a specified directory and
   replaces all occurrences of the target extension with a
