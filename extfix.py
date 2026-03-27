@@ -21,9 +21,14 @@ TARGET_EXT = ".png"      # The extension you want to be replaced.
 NEW_EXT = ".jpg"         # The new extension to replace with.
 
 if __name__ == "__main__":
-  # Lowercase the extensions incase of user-error.
-  TARGET_EXT = TARGET_EXT.lower()
-  NEW_EXT = NEW_EXT.lower()
+  # Clean the extensions incase of user-error.
+  TARGET_EXT = TARGET_EXT.lower().strip()
+  NEW_EXT = NEW_EXT.lower().strip()
+  # If user forgets the ".", add it for them.
+  if TARGET_EXT != "" and TARGET_EXT[0] != ".":
+    TARGET_EXT = "." + TARGET_EXT
+  if NEW_EXT != "" and NEW_EXT[0] != ".":
+    NEW_EXT = "." + NEW_EXT
 
   # Counters
   success_count = 0
@@ -37,14 +42,16 @@ if __name__ == "__main__":
   # For every file in the subdirectory.
   for file in files:
     # File does not have the right extension to convert.
-    if file.suffix.lower() != TARGET_EXT:
+    if ((TARGET_EXT != "" or file.suffix != "")
+        and file.name[-1*len(TARGET_EXT):] != TARGET_EXT):
       skip_count += 1
       print(f"[WARNING] {file.name} has been skipped since it is not the "
             f"target extension ({TARGET_EXT}).")
       continue
 
     # Create new file with the extension.
-    new_file = file.with_suffix(NEW_EXT)
+    new_file = file.with_name(f"{file.name[0:len(file.name)-len(TARGET_EXT)]}"
+                              f"{NEW_EXT}")
 
     # Already a file with the same name using that extension!
     if new_file.exists():
