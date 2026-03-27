@@ -3,7 +3,11 @@ Mass fixes or converts specified files' extensions in a folder to a different on
 - i.e. `file.png` -> `file.jpg`
 
 # Requirements
-- Python3
+- ### All Versions
+  - Python >= 3.9
+- ### UI Version
+  - `pip install -r requirements.txt`
+
 
 # How To Use
 1. Download `extfix.py`.
