@@ -18,6 +18,21 @@ ctk.set_appearance_mode("dark")  # Set to dark mode.
 
 
 class ExtFixApp(ctk.CTk):
+  """A CustomTkinter-based GUI application for mass-renaming file extensions.
+
+  This class inherits from the CustomTkinter class, creates the UI layout,
+  and handles the file renaming logic with a visual progress bar.
+
+  Attributes:
+    selected_entry (ctk.CTkEntry): Display, shows the current target directory.
+    target_ext_entry (ctk.CTkEntry): Input field, the extension to be replaced.
+    new_ext_entry (ctk.CTkEntry): Input field, the extension to replace with.
+    start_btn (ctk.CTkButton): Control, triggers the renaming task.
+    progress_bar (ctk.CTkProgressBar): Display, shows the progress of the task.
+    extfix_output (ctk.CTkTextbox): Display, shows the task log warnings,
+        errors, and completion messages.
+  """
+
   # App constants.
   FONT_FAMILY = "Roboto"
   SECTION_FONT = (FONT_FAMILY, 20, "bold")
@@ -27,6 +42,7 @@ class ExtFixApp(ctk.CTk):
   PAD_Y = 14   # Y-axis padding.
 
   def __init__(self):
+    """Initialize the application window and build the UI layout."""
     super().__init__()  # Inherit from CTk and initialize.
 
     # Data storage.
@@ -49,6 +65,7 @@ class ExtFixApp(ctk.CTk):
 
 
   def create_directory_section(self):
+    """Create the Directory section of the UI."""
     # Directory section.
     dir_label = ctk.CTkLabel(self, text="Directory",
                              font=self.SECTION_FONT,
@@ -71,6 +88,7 @@ class ExtFixApp(ctk.CTk):
     dir_selector_btn.pack(padx=self.PAD_X, pady=(self.PAD_Y/2, 0))
 
   def create_extensions_section(self):
+    """Create the Extensions section of the UI."""
     # Extensions section.
     ext_label = ctk.CTkLabel(self, text="Extension Settings",
                              font=self.SECTION_FONT,
@@ -98,6 +116,7 @@ class ExtFixApp(ctk.CTk):
                        side="right")
 
   def create_extfix_section(self):
+    """Create the ExtFix section of the UI."""
     # ExtFix section.
     extfix_label = ctk.CTkLabel(self, text="ExtFix", font=self.SECTION_FONT,
                                  fg_color=("gray70", "gray30"))
@@ -121,6 +140,7 @@ class ExtFixApp(ctk.CTk):
     self.extfix_output.pack(fill="both", expand=True)
 
   def browse_directory(self):
+    """Open a system folder picker and update the selected_entry field."""
     directory_path = filedialog.askdirectory()
     if directory_path:
       # Unlock the entry.
@@ -133,6 +153,13 @@ class ExtFixApp(ctk.CTk):
       self.selected_entry.configure(state="readonly")
 
   def start_extfix(self):
+    """
+    Initialize the batch renaming process.
+
+    Validate and clean user input, iterate through the directory using pathlib,
+    and rename files matching the target extension to the new extension.
+    Updates the progress bar in real time.
+    """
     self.clear_output()
 
     # Grab values from entries.
@@ -216,6 +243,7 @@ class ExtFixApp(ctk.CTk):
     self.start_btn.configure(state="normal")
 
   def clear_output(self):
+    """Clear the extfix_output log."""
     # Unlock the output.
     self.extfix_output.configure(state="normal")
 
@@ -226,6 +254,12 @@ class ExtFixApp(ctk.CTk):
     self.extfix_output.configure(state="disabled")
 
   def send_output(self, output_message):
+    """
+    Send a message to the extfix_output log.
+    
+    Args:
+      output_message (str): The message to send.
+    """
     # Unlock the output.
     self.extfix_output.configure(state="normal")
 
