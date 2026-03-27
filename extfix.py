@@ -16,9 +16,13 @@
 
 from pathlib import Path
 
-DIRECTORY_NAME = "Test"  # The directory path with all the files to be fixed.
-TARGET_EXT = ".jpg"      # The extension you want to be replaced.
-NEW_EXT = ".png"         # The new extension to replace with.
+import sys
+
+
+DIRECTORY_NAME = "Test"   # The directory path with all the files to be fixed.
+TARGET_EXT = ".jpg"       # The extension you want to be replaced.
+NEW_EXT = ".png"          # The new extension to replace with.
+
 
 if __name__ == "__main__":
   # Clean the extensions incase of user-error.
@@ -37,6 +41,9 @@ if __name__ == "__main__":
 
   # Grab every file in the directory into the list.
   directory = Path(DIRECTORY_NAME)
+  if not directory.exists():
+    print(f"[Error] {directory}: is not a valid directory.")
+    sys.exit(1)
 
   # For every file in the subdirectory.
   for file in directory.iterdir():
@@ -47,8 +54,13 @@ if __name__ == "__main__":
     # File does not have the right extension to convert.
     if not file.name.endswith(TARGET_EXT):
       skip_count += 1
-      print(f"[WARNING] {file.name} has been skipped since it is not the "
+      print(f"[WARNING] {file.name}: skipped, not the "
             f"target extension ({TARGET_EXT}).")
+      continue
+
+    # Edge case: TARGET_EXT == "" is true for everything.
+    if TARGET_EXT == "" and file.suffix != "":
+      # Skip file if file already has a suffix.
       continue
 
     # Create new file with the extension.
@@ -57,7 +69,7 @@ if __name__ == "__main__":
 
     # Already a file with the same name using that extension!
     if new_file.exists():
-      print(f"[ERROR] {file.name} cannot be converted, "
+      print(f"[ERROR] {file.name}: cannot be converted, "
             f"{new_file.name} already exists!")
       error_count += 1
       continue
