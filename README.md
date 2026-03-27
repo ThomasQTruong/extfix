@@ -1,5 +1,5 @@
 # extfix
-Mass fixes or converts specified files' extensions in a folder to a different one.
+Mass fixes or converts file extensions in a specified folder to a different extension.
 - i.e. `file.png` -> `file.jpg`
 <p align="center">
   <img src=".assets/extfix-menu.png" width="300" title="ExtFix GUI">
