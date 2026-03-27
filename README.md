@@ -27,7 +27,7 @@ Mass fixes or converts file extensions in a specified folder to a different exte
   - `DIRECTORY_NAME` = The directory path with all the files to be fixed.
     - If you do not know what you are doing, just create a folder in the same directory as [extfix_cli](extfix_cli.py) (but don't put [extfix_cli](extfix_cli.py) in the created folder).
       - Either name the folder `Test` or whatever you set the `DIRECTORY_NAME` to.
-    - <img width="114" height="61" alt="image" src="https://github.com/user-attachments/assets/dbbb28cc-92c2-49ce-982f-1be157d1920e" />
+    - <img src=".assets/extfix-cli-folder.png" width="115" height="60" title="ExtFix_CLI Folder/>
   - `TARGET_EXT` = the extension you want to be replaced.
     - i.e. `file.png` -> `file.jpg` then you would put `.png`.
   - `NEW_EXT` = the new extension to replace with.
