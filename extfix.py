@@ -10,11 +10,21 @@
 """
 
 import os
+import sys
 import customtkinter as ctk
 from tkinter import filedialog
 from pathlib import Path
+from PIL import Image, ImageTk
 
 ctk.set_appearance_mode("dark")  # Set to dark mode.
+
+def get_resource_path(rel_path):
+  """Get absolute path to resource for dev and PyInstaller."""
+  try:
+    base_path = sys._MEIPASS  # pylint: disable=protected-access
+  except AttributeError:
+    base_path = os.path.abspath(".")
+  return os.path.join(base_path, rel_path)
 
 
 class ExtFixApp(ctk.CTk):
@@ -53,17 +63,39 @@ class ExtFixApp(ctk.CTk):
     self.start_btn = None
     self.progress_bar = None
     self.extfix_output = None
+    self.icon = None
 
     # App settings.
-    self.title("extfix")      # Set the title of the app.
-    self.geometry("500x400")  # Set app size.
-    self.resizable(0, 0)      # Make app unresizeable.
+    self.title("extfix")                  # Set the title of the app.
+    self.geometry("500x400")              # Set app size.
+    self.resizable(0, 0)                  # Make app unresizeable.
+    self.after(200, self.set_app_icon)  # Set the app icon.
 
     # App creation.
     self.create_directory_section()
     self.create_extensions_section()
     self.create_extfix_section()
 
+
+  def set_app_icon(self):
+    try:
+      # Obtain path to icon and set it.
+      icon_path = get_resource_path("icon.png")
+      if not os.path.exists(icon_path):
+        icon_path = get_resource_path(os.path.join(".assets", "app",
+                                                   "icon.png"))
+      # User is on Windows OS.
+      if sys.platform.startswith("win"):
+        ico_path = icon_path.replace(".png", ".ico")
+        self.iconbitmap(ico_path)
+      else:
+        # Not Windows OS, use a different method.
+        raw_img = Image.open(icon_path)
+        self.icon = ImageTk.PhotoImage(raw_img)
+        self.wm_iconphoto(False, self.icon)
+    except (FileNotFoundError, AttributeError):
+      # App icon cant be found, ignore and leave default icon.
+      pass
 
   def create_directory_section(self):
     """Create the Directory section of the UI."""
