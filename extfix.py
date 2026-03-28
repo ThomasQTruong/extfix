@@ -76,6 +76,11 @@ class ExtFixApp(ctk.CTk):
     self.create_extensions_section()
     self.create_extfix_section()
 
+    # Create color tags for the text output.
+    self.extfix_output.tag_config("error", foreground="#cb3f3f")   # Red
+    self.extfix_output.tag_config("warning", foreground="#cf8b0c") # Orange
+    self.extfix_output.tag_config("success", foreground="#3e9b59") # Green
+
 
   def set_app_icon(self):
     try:
@@ -207,13 +212,14 @@ class ExtFixApp(ctk.CTk):
 
     # One or more of the entries were not filled!
     if directory_path == "No Directory Selected":
-      self.send_output("[Error] Please select the directory.")
+      self.send_output("[Error] Please select the directory.", "error")
       return
 
     # Grab the directory and check if it exts.
     directory = Path(directory_path)
     if not directory.exists():
-      self.send_output(f"[Error] {directory}: is not a valid directory.")
+      self.send_output(f"[Error] {directory}: is not a valid directory.",
+                       "error")
       return
 
     # Lock the button so the user can't press until the process is done.
@@ -239,14 +245,15 @@ class ExtFixApp(ctk.CTk):
       # If it is not a file, skip it.
       if not file.is_file():
         warning_count += 1
-        self.send_output(f"[WARNING] {file.name}: skipped, not a valid file.")
+        self.send_output(f"[WARNING] {file.name}: skipped, not a valid file.",
+                         "warning")
         continue
 
       # File does not have the right extension to convert.
       if not file.name.endswith(target_ext):
         warning_count += 1
         self.send_output(f"[WARNING] {file.name}: skipped, not the "
-                         f"target extension ({target_ext}).")
+                         f"target extension ({target_ext}).", "warning")
         continue
 
       # Edge case: target_ext == "" is true for everything.
@@ -261,7 +268,7 @@ class ExtFixApp(ctk.CTk):
       # Already a file with the same name using that extension!
       if new_file.exists():
         self.send_output(f"[ERROR] {file.name}: cannot be converted, "
-                         f"{new_file.name} already exists!")
+                         f"{new_file.name} already exists!", "error")
         error_count += 1
         continue
 
@@ -270,7 +277,8 @@ class ExtFixApp(ctk.CTk):
       success_count += 1
 
     self.send_output(f"Finished converting {success_count} files with "
-                     f"{warning_count} skipped and {error_count} errors.")
+                     f"{warning_count} skipped and {error_count} errors.",
+                     "success", False)
     self.extfix_output.see("end")
 
     # Unlock button; process is finished.
@@ -288,18 +296,28 @@ class ExtFixApp(ctk.CTk):
     # Lock the output.
     self.extfix_output.configure(state="disabled")
 
-  def send_output(self, output_message):
+  def send_output(self, output_message, tag=None, endl=True):
     """
     Send a message to the extfix_output log.
     
     Args:
       output_message (str): The message to send.
+      tag (str): Tag to determine message color (default: None).
+      endl (bool): End the line or not (default: True).
     """
     # Unlock the output.
     self.extfix_output.configure(state="normal")
 
-    # Send the output.
-    self.extfix_output.insert("end", output_message + "\n")
+    if tag:
+      # Send the output with specified tag color.
+      self.extfix_output.insert("end", output_message, tag)
+    else:
+      # Send the output normally.
+      self.extfix_output.insert("end", output_message)
+
+    # End the line.
+    if endl:
+      self.extfix_output.insert("end", "\n")
 
     # Lock the output.
     self.extfix_output.configure(state="disabled")
