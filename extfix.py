@@ -42,6 +42,7 @@ class ExtFixApp(ctk.CTk):
     progress_bar (ctk.CTkProgressBar): Display, shows the progress of the task.
     extfix_output (ctk.CTkTextbox): Display, shows the task log warnings,
         errors, and completion messages.
+    icon (ImageTk.PhotoImage): The app icon.
   """
 
   # App constants.
