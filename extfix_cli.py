@@ -35,7 +35,7 @@ def main():
 
   # Counters
   success_count = 0
-  skip_count = 0
+  warning_count = 0
   error_count = 0
 
   # Grab every file in the directory into the list.
@@ -48,11 +48,13 @@ def main():
   for file in directory.iterdir():
     # If it is not a file, skip it.
     if not file.is_file():
+      warning_count += 1
+      print(f"[WARNING] {file.name}: skipped, not a valid file.")
       continue
 
     # File does not have the right extension to convert.
     if not file.name.endswith(target_ext):
-      skip_count += 1
+      warning_count += 1
       print(f"[WARNING] {file.name}: skipped, not the "
             f"target extension ({target_ext}).")
       continue
@@ -78,7 +80,7 @@ def main():
     success_count += 1
 
   print(f"Finished converting {success_count} files with "
-        f"{skip_count} skipped and {error_count} errors.")
+        f"{warning_count} skipped and {error_count} errors.")
 
 
 if __name__ == "__main__":

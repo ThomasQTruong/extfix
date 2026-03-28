@@ -221,7 +221,7 @@ class ExtFixApp(ctk.CTk):
 
     # Counters
     success_count = 0
-    skip_count = 0
+    warning_count = 0
     error_count = 0
 
     # Amount of items in the directory (for progress bar).
@@ -238,11 +238,13 @@ class ExtFixApp(ctk.CTk):
 
       # If it is not a file, skip it.
       if not file.is_file():
+        warning_count += 1
+        self.send_output(f"[WARNING] {file.name}: skipped, not a valid file.")
         continue
 
       # File does not have the right extension to convert.
       if not file.name.endswith(target_ext):
-        skip_count += 1
+        warning_count += 1
         self.send_output(f"[WARNING] {file.name}: skipped, not the "
                          f"target extension ({target_ext}).")
         continue
@@ -268,7 +270,7 @@ class ExtFixApp(ctk.CTk):
       success_count += 1
 
     self.send_output(f"Finished converting {success_count} files with "
-                     f"{skip_count} skipped and {error_count} errors.")
+                     f"{warning_count} skipped and {error_count} errors.")
     self.extfix_output.see("end")
 
     # Unlock button; process is finished.
